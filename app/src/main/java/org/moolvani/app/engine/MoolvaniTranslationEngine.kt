@@ -46,7 +46,7 @@ class MoolvaniTranslationEngine(
         ),
         ClassroomPhrase(
             canonicalHindi = "बैठ जाओ",
-            variants = listOf("बैठ जाओ", "बैठ जाइए", "बैठो", "बैठिए", "नीचे बैठो", "अपनी जगह पर बैठो"),
+            variants = listOf("बैठ जाओ", "बैठ जाइए", "बैठो", "बैठिए", "नीचे बैठो", "अपनी जगह पर बैठो", "सिट डाउन", "sit down"),
             olChiki = "ᱫᱩᱲᱩᱵ ᱢᱮ",
             roman = "Durub me",
             englishMeaning = "Sit down",
@@ -54,7 +54,7 @@ class MoolvaniTranslationEngine(
         ),
         ClassroomPhrase(
             canonicalHindi = "खड़े हो जाओ",
-            variants = listOf("खड़े हो जाओ", "खड़े हो जाइए", "खड़े हो", "खड़ा हो जाओ", "उठो", "खड़े रहिए"),
+            variants = listOf("खड़े हो जाओ", "खड़े हो जाइए", "खड़े हो", "खड़ा हो जाओ", "उठो", "खड़े रहिए", "स्टैंड अप", "stand up"),
             olChiki = "ᱛᱤᱸᱜᱩᱱ ᱢᱮ",
             roman = "Tingun me",
             englishMeaning = "Stand up",
@@ -62,7 +62,7 @@ class MoolvaniTranslationEngine(
         ),
         ClassroomPhrase(
             canonicalHindi = "शांत रहिए",
-            variants = listOf("शांत रहिए", "शांत रहो", "चुप रहो", "चुप रहिए", "आवाज मत करो", "शोर मत करो", "सब चुप रहो"),
+            variants = listOf("शांत रहिए", "शांत रहो", "चुप रहो", "चुप रहिए", "आवाज मत करो", "शोर मत करो", "सब चुप रहो", "बी क्वाइट", "be quiet"),
             olChiki = "ᱛᱷᱤᱨ ᱛᱟᱦᱮᱸᱱ ᱢᱮ",
             roman = "Thir tahen me",
             englishMeaning = "Be quiet",
@@ -70,7 +70,7 @@ class MoolvaniTranslationEngine(
         ),
         ClassroomPhrase(
             canonicalHindi = "ध्यान से सुनो",
-            variants = listOf("ध्यान से सुनो", "ध्यान से सुनिए", "सुनो", "सुनिए", "मेरी बात सुनो", "गौर से सुनो"),
+            variants = listOf("ध्यान से सुनो", "ध्यान से सुनिए", "सुनो", "सुनिए", "मेरी बात सुनो", "गौर से सुनो", "लिसन", "listen"),
             olChiki = "ᱫᱷᱮᱭᱟᱱ ᱛᱮ ᱟᱧᱡᱚᱢ ᱢᱮ",
             roman = "Dheyan te anjom me",
             englishMeaning = "Listen carefully",
@@ -78,7 +78,7 @@ class MoolvaniTranslationEngine(
         ),
         ClassroomPhrase(
             canonicalHindi = "कोई डाउट है?",
-            variants = listOf("कोई डाउट है?", "कोई डाउट है", "कोई सवाल है?", "कोई सवाल है", "कोई प्रश्न है?", "कुछ पूछना है?"),
+            variants = listOf("कोई डाउट है?", "कोई डाउट है", "कोई सवाल है?", "कोई सवाल है", "कोई प्रश्न है?", "कुछ पूछना है?", "एनी डाउट", "any doubt"),
             olChiki = "ᱡᱟᱦᱟᱸᱱᱟᱜ ᱠᱩᱠᱞᱤ ᱢᱮᱱᱟᱜᱼᱟ?",
             roman = "Jahannag kukli menaga?",
             englishMeaning = "Any doubts / questions?",
@@ -86,7 +86,7 @@ class MoolvaniTranslationEngine(
         ),
         ClassroomPhrase(
             canonicalHindi = "पानी पीना है?",
-            variants = listOf("पानी पीना है?", "पानी पीना है", "पानी चाहिए?", "पानी पीना चाहते हो?"),
+            variants = listOf("पानी पीना है?", "पानी पीना है", "पानी चाहिए?", "पानी चाहिए", "पानी पीना चाहते हो?", "want water", "need water"),
             olChiki = "ᱫᱟᱜ ᱧᱩ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?",
             roman = "Dag nyu sanayed meya?",
             englishMeaning = "Do you want water?",
@@ -94,7 +94,7 @@ class MoolvaniTranslationEngine(
         ),
         ClassroomPhrase(
             canonicalHindi = "सुप्रभात शिक्षक",
-            variants = listOf("सुप्रभात शिक्षक", "सुप्रभात", "शुभ प्रभात", "नमस्ते शिक्षक", "नमस्ते सर", "नमस्ते मैडम", "गुड मॉर्निंग"),
+            variants = listOf("सुप्रभात शिक्षक", "सुप्रभात", "शुभ प्रभात", "नमस्ते शिक्षक", "नमस्ते सर", "नमस्ते मैडम", "गुड मॉर्निंग", "good morning"),
             olChiki = "ᱡᱚᱦᱟᱨ ᱢᱟᱪᱮᱛ",
             roman = "Johar Machet",
             englishMeaning = "Good morning teacher",
@@ -102,7 +102,7 @@ class MoolvaniTranslationEngine(
         ),
         ClassroomPhrase(
             canonicalHindi = "धन्यवाद",
-            variants = listOf("धन्यवाद", "बहुत धन्यवाद", "शुक्रिया", "थैंक यू"),
+            variants = listOf("धन्यवाद", "बहुत धन्यवाद", "शुक्रिया", "थैंक यू", "thank you"),
             olChiki = "ᱥᱟᱨᱦᱟᱣ",
             roman = "Sarhaw",
             englishMeaning = "Thank you",
