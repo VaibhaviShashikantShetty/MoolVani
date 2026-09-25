@@ -47,24 +47,26 @@ class SpeechRecognitionHelper(private val context: Context) {
     private var currentLanguageCode: String = "hi-IN"
     private var lastRecognizedText: String = ""
 
-    // Constrained Classroom Grammar with out-of-vocabulary [unk] support
+    // Constrained Classroom Grammar with constituent tokens for single & multi-sentence combinations
     private val classroomGrammarJson = """
         [
-            "किताब खोलिए", "किताब खोलो", "किताब बंद करो", "किताब बंद करिए",
-            "बैठ जाओ", "बैठो", "बैठ जाइए", "सिट डाउन",
-            "खड़े हो जाओ", "खड़े हो जाइए", "उठो", "स्टैंड अप",
-            "शांत रहिए", "शांत रहो", "चुप रहो", "बी क्वाइट",
-            "ध्यान से सुनो", "ध्यान से सुनिए", "सुनो", "लिसन",
-            "कोई डाउट है", "कोई सवाल है",
-            "पानी पीना है", "पानी चाहिए", "पानी", "वाटर",
-            "सुप्रभात शिक्षक", "सुप्रभात", "नमस्ते", "गुड मॉर्निंग",
-            "धन्यवाद", "थैंक यू", "शुक्रिया",
-            "समझ में आया", "हाँ मुझे समझ आ गया", "नहीं मुझे समझ नहीं आया",
-            "लिखना शुरू करो", "लिखो", "पढ़ो",
-            "हाथ उठाओ", "यहाँ आओ", "वहाँ जाओ",
-            "ब्लैकबोर्ड पर देखिए", "बोर्ड देखो",
+            "किताब", "खोलिए", "खोलो", "खोल", "बंद", "करो", "करिए", "रखो",
+            "बैठ", "जाओ", "बैठो", "बैठिए", "नीचे", "सिट", "डाउन",
+            "खड़े", "हो", "उठो", "खड़ा", "स्टैंड", "अप",
+            "शांत", "रहिए", "रहो", "चुप", "आवाज", "मत", "शोर", "बी", "क्वाइट",
+            "ध्यान", "से", "सुनो", "सुनिए", "मेरी", "बात", "लिसन",
+            "और", "तथा", "फिर", "भी", "सब", "बच्चे", "अपनी", "जगह", "पर", "को",
+            "कोई", "डाउट", "है", "सवाल", "प्रश्न", "पूछो", "उत्तर", "दो", "जवाब",
+            "पानी", "पीना", "चाहिए", "चाहते", "वाटर",
+            "सुप्रभात", "शिक्षक", "नमस्ते", "गुड", "मॉर्निंग", "सर", "मैडम", "प्रणाम",
+            "धन्यवाद", "थैंक", "यू", "शुक्रिया",
+            "समझ", "में", "आया", "हाँ", "मुझे", "गया", "नहीं", "समझे",
+            "लिखना", "शुरू", "लिखो", "पढ़ो", "पढ़ना", "कॉपी", "कलम", "पेन", "पेंसिल",
+            "हाथ", "उठाओ", "ऊपर", "यहाँ", "आओ", "वहाँ", "इधर", "उधर", "पास",
+            "ब्लैकबोर्ड", "बोर्ड", "देखिए", "देखो", "तरफ", "श्यामपट्ट",
             "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात", "आठ", "नौ", "दस",
-            "गाय", "हाथी", "लाल", "खाना", "स्कूल", "दोस्त", "कलम", "कॉपी", "बोर्ड",
+            "गाय", "हाथी", "कुत्ता", "बिल्ली", "लाल", "खाना", "स्कूल", "दोस्त", "मित्र", "घर",
+            "आप", "कैसे", "हैं", "हो", "तुम", "नाम", "क्या", "मेरा", "बहुत", "अच्छा", "बढ़िया", "शाबाश",
             "[unk]"
         ]
     """.trimIndent().replace("\n", "").replace("  ", "")
@@ -165,8 +167,8 @@ class SpeechRecognitionHelper(private val context: Context) {
 
     /**
      * Actively listens to speech offline:
-     * 1. Opens AudioRecord mic immediately (< 5ms).
-     * 2. Computes live RMS amplitude for real-time visual ripple.
+     * 1. Opens AudioRecord mic with VOICE_RECOGNITION hardware preprocessing & AGC.
+     * 2. Digital gain multiplier (2.2x) enables sensitive pickup at 1-2 feet distance.
      * 3. Streams audio directly to Vosk Neural ASR.
      * 4. Dispatches exact recognized Hindi command for translation & audio playback.
      */
@@ -202,18 +204,29 @@ class SpeechRecognitionHelper(private val context: Context) {
         val minBufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, audioFormat)
         val bufferSize = if (minBufferSize > 0) minBufferSize.coerceAtLeast(4096) else 4096
 
+        // Prefer VOICE_RECOGNITION (enables hardware AGC, noise suppression, and speech tuning)
         try {
             audioRecord = AudioRecord(
-                MediaRecorder.AudioSource.MIC,
+                MediaRecorder.AudioSource.VOICE_RECOGNITION,
                 sampleRate,
                 channelConfig,
                 audioFormat,
                 bufferSize
             )
         } catch (e: Exception) {
-            Log.e(TAG, "AudioRecord instantiation failed", e)
-            dispatchResult(null, "Microphone unavailable. Please grant microphone permission.")
-            return
+            try {
+                audioRecord = AudioRecord(
+                    MediaRecorder.AudioSource.MIC,
+                    sampleRate,
+                    channelConfig,
+                    audioFormat,
+                    bufferSize
+                )
+            } catch (e2: Exception) {
+                Log.e(TAG, "AudioRecord instantiation failed", e2)
+                dispatchResult(null, "Microphone unavailable. Please grant microphone permission.")
+                return
+            }
         }
 
         val record = audioRecord
@@ -273,13 +286,15 @@ class SpeechRecognitionHelper(private val context: Context) {
                 while (isOfflineRecording && !Thread.currentThread().isInterrupted) {
                     val read = record.read(audioBuffer, 0, audioBuffer.size)
                     if (read > 0) {
-                        // Compute RMS for live UI wave ripple
+                        // Software digital gain boost (2.2x) for sensitive pickup at arm's length (1-2 ft)
+                        val gain = 2.2f
                         var sum = 0.0
                         for (i in 0 until read) {
-                            val s = audioBuffer[i]
-                            sum += s * s
-                            if (capturedSamples.size < sampleRate * 5) {
-                                capturedSamples.add(s)
+                            val boosted = (audioBuffer[i] * gain).toInt().coerceIn(-32768, 32767).toShort()
+                            audioBuffer[i] = boosted
+                            sum += boosted * boosted
+                            if (capturedSamples.size < sampleRate * 7) {
+                                capturedSamples.add(boosted)
                             }
                         }
                         val rms = sqrt(sum / read)
@@ -315,23 +330,23 @@ class SpeechRecognitionHelper(private val context: Context) {
                             }
                         }
 
-                        // Silence and end-of-speech detection
-                        if (db > 34f) {
+                        // Sensitive voice activity detection (25dB captures normal voice at 1-2 feet)
+                        if (db > 25f) {
                             activeFrames++
-                            if (activeFrames >= 3) {
+                            if (activeFrames >= 2) {
                                 speechDetected = true
                                 silenceFrames = 0
                             }
                         } else if (speechDetected) {
                             silenceFrames++
-                            // After speech starts, finalize when silence persists for ~1.0s (16 frames * 64ms)
-                            if (silenceFrames >= 16) {
+                            // After speech starts, allow ~1.4s pause between clauses (22 frames * 64ms)
+                            if (silenceFrames >= 22) {
                                 break
                             }
                         }
 
-                        // Max speech window: 4.8s
-                        if (System.currentTimeMillis() - startTime > 4800) {
+                        // Max speech window: 6.5s to comfortably fit combined 2-sentence commands
+                        if (System.currentTimeMillis() - startTime > 6500) {
                             break
                         }
                     } else {
@@ -356,20 +371,28 @@ class SpeechRecognitionHelper(private val context: Context) {
                     } catch (ignored: Exception) {}
                 }
 
-                val finalOutput = if (recognizedFinal.isNotBlank() && recognizedFinal != "[unk]") {
-                    recognizedFinal
-                } else if (lastPartial.isNotBlank() && lastPartial != "[unk]") {
-                    lastPartial
-                } else if (languageCode.startsWith("sat")) {
-                    matchSantaliAudio(capturedSamples.toShortArray())
-                } else {
-                    null
+                fun cleanRecognized(text: String): String {
+                    return text.replace("[unk]", "")
+                        .replace(Regex("\\s+"), " ")
+                        .trim()
+                }
+
+                val finalClean = cleanRecognized(recognizedFinal)
+                val partialClean = cleanRecognized(lastPartial)
+
+                val finalOutput = when {
+                    finalClean.isNotBlank() -> finalClean
+                    partialClean.isNotBlank() -> partialClean
+                    languageCode.startsWith("sat") -> matchSantaliAudio(capturedSamples.toShortArray())
+                    else -> null
                 }
 
                 if (!finalOutput.isNullOrBlank()) {
                     dispatchResult(finalOutput, null)
+                } else if (speechDetected) {
+                    dispatchResult(null, "Could not clearly understand the audio. Please speak again.")
                 } else {
-                    dispatchResult(null, "No voice detected. Please speak clearly into the microphone.")
+                    dispatchResult(null, "No voice detected. Please tap mic and speak.")
                 }
             }
         }, "VoskOfflineAudioListenerThread").apply {
@@ -418,8 +441,8 @@ class SpeechRecognitionHelper(private val context: Context) {
             if (rms > peakRms) peakRms = rms
         }
 
-        if (peakRms < 120f) return null
-        val voicedThreshold = (peakRms * 0.22f).coerceIn(80f, 320f)
+        if (peakRms < 100f) return null
+        val voicedThreshold = (peakRms * 0.22f).coerceIn(60f, 300f)
         var voicedFrames = 0
         var totalZcr = 0.0
         var voicedZcrCount = 0
@@ -442,7 +465,7 @@ class SpeechRecognitionHelper(private val context: Context) {
             }
         }
 
-        if (voicedFrames < 6) return null
+        if (voicedFrames < 5) return null
 
         var syllables = 0
         var inPeak = false
