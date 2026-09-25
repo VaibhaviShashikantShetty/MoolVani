@@ -89,4 +89,27 @@ class TranslationEngineTest {
         assertEquals("ᱚᱲᱟᱜ", result.targetOlChiki)
         assertTrue(result.matchedCategory.contains("AI Model"))
     }
+
+    @Test
+    fun testEnglishOfflineTranslation() {
+        val openBook = engine.translate("open your book", Language.HINDI, Language.SANTHALI)
+        assertEquals("ᱯᱚᱛᱚᱵ ᱡᱷᱤᱡᱽ ᱢᱮ", openBook.targetOlChiki)
+        assertEquals("Potob jhij me", openBook.targetRoman)
+
+        val sitDown = engine.translate("sit down", Language.HINDI, Language.SANTHALI)
+        assertEquals("ᱫᱩᱲᱩᱵ ᱢᱮ", sitDown.targetOlChiki)
+        assertEquals("Durub me", sitDown.targetRoman)
+
+        val water = engine.translate("water", Language.HINDI, Language.SANTHALI)
+        assertEquals("ᱫᱟᱜ", water.targetOlChiki)
+        assertEquals("Dag", water.targetRoman)
+
+        val elephant = engine.translate("elephant", Language.HINDI, Language.SANTHALI)
+        assertEquals("ᱦᱟᱹᱛᱤ", elephant.targetOlChiki)
+        assertEquals("Hati", elephant.targetRoman)
+
+        val thankYou = engine.translate("thank you", Language.HINDI, Language.SANTHALI)
+        assertEquals("ᱥᱟᱨᱦᱟᱣ", thankYou.targetOlChiki)
+        assertEquals("Sarhaw", thankYou.targetRoman)
+    }
 }
