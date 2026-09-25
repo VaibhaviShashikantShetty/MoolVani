@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_screen">
+
+    <!-- Top App Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/navy_primary"
+        android:paddingHorizontal="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_back_course"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Back"
+            app:tint="@color/white" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:id="@+id/tv_detail_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NUMBERS (ᱮᱞᱠᱷᱟ)"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_detail_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MoolVani Classroom Module"
+                android:textColor="#94A3B8"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🟢 Offline"
+            android:textColor="#34D399"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:background="#1E293B"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- "Translated texts" Box & Player as in sketch 3 -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TRANSLATED TEXTS (ᱛᱚᱨᱡᱚᱢᱟ ᱚᱞ)"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Main Display Area for Translated Active Text -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="120dp"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="#F8FAFC"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/tv_reader_emoji"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🔢"
+                            android:textSize="36sp"
+                            android:layout_marginBottom="6dp" />
+
+                        <TextView
+                            android:id="@+id/tv_reader_olchiki"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="᱑ - ᱢᱤᱫ"
+                            android:textSize="30sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/navy_primary" />
+
+                        <TextView
+                            android:id="@+id/tv_reader_roman"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mid"
+                            android:textSize="18sp"
+                            android:textColor="@color/navy_accent"
+                            android:textStyle="italic"
+                            android:layout_marginTop="2dp" />
+
+                        <TextView
+                            android:id="@+id/tv_reader_hindi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="एक (One)"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <!-- Speed Bar matching Sketch: "Speed bar" (0.75x, 1x, 1.25x, 1.5x) and "R/P" button -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="16dp"
+                        android:background="#EFF6FF"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Speed:"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/navy_primary"
+                            android:layout_marginEnd="6dp" />
+
+                        <!-- 0.75x -->
+                        <Button
+                            android:id="@+id/btn_speed_075"
+                            android:layout_width="54dp"
+                            android:layout_height="38dp"
+                            android:text="0.75x"
+                            android:textSize="11sp"
+                            android:textColor="@color/navy_primary"
+                            android:backgroundTint="@color/white"
+                            android:padding="0dp"
+                            android:layout_marginEnd="4dp" />
+
+                        <!-- 1x -->
+                        <Button
+                            android:id="@+id/btn_speed_100"
+                            android:layout_width="50dp"
+                            android:layout_height="38dp"
+                            android:text="1x"
+                            android:textSize="11sp"
+                            android:textColor="@color/white"
+                            android:backgroundTint="@color/navy_primary"
+                            android:padding="0dp"
+                            android:layout_marginEnd="4dp" />
+
+                        <!-- 1.25x -->
+                        <Button
+                            android:id="@+id/btn_speed_125"
+                            android:layout_width="54dp"
+                            android:layout_height="38dp"
+                            android:text="1.25x"
+                            android:textSize="11sp"
+                            android:textColor="@color/navy_primary"
+                            android:backgroundTint="@color/white"
+                            android:padding="0dp"
+                            android:layout_marginEnd="4dp" />
+
+                        <!-- 1.5x -->
+                        <Button
+                            android:id="@+id/btn_speed_150"
+                            android:layout_width="50dp"
+                            android:layout_height="38dp"
+                            android:text="1.5x"
+                            android:textSize="11sp"
+                            android:textColor="@color/navy_primary"
+                            android:backgroundTint="@color/white"
+                            android:padding="0dp" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
+
+                        <!-- R/P (Repeat / Play-Pause) Button matching Sketch 3 -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+
+                            <ImageButton
+                                android:id="@+id/btn_play_pause"
+                                android:layout_width="52dp"
+                                android:layout_height="52dp"
+                                android:background="@drawable/bg_mic_circle"
+                                android:src="@drawable/ic_play_arrow"
+                                android:contentDescription="Play or Pause Lesson Audio"
+                                app:tint="@color/navy_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="R / P"
+                                android:textSize="10sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/navy_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Vocabulary Items Header -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lesson Vocabulary (ᱯᱟᱲᱦᱟᱣ ᱟᱹᱲᱟᱹ):"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/navy_primary"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Vocabulary Items RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_course_vocab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
