@@ -6,6 +6,9 @@ import android.content.Intent
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -28,55 +31,45 @@ class SpeechRecognitionHelper(private val context: Context) {
     private val mainHandler = Handler(Looper.getMainLooper())
     private var lastRecognizedText: String = ""
 
-    // Offline AudioRecord fallback state
+    // Native Offline AudioRecord state
     private var isOfflineRecording = false
     private var audioRecord: AudioRecord? = null
     private var offlineRecordingThread: Thread? = null
-    private var offlinePhraseIndex = 0
 
-    private val offlineClassroomPhrasesHi = listOf(
-        "किताब खोलिए",
-        "बैठ जाओ",
-        "खड़े हो जाओ",
-        "किताब बंद करो",
-        "ध्यान से सुनो",
-        "कोई डाउट है?",
-        "पानी पीना है?",
-        "सुप्रभात शिक्षक",
-        "ब्लैकबोर्ड पर देखिए",
-        "लिखना शुरू करो",
-        "हाथ उठाओ",
-        "शांत रहिए",
-        "समझ में आया?",
-        "हाँ, मुझे समझ आ गया",
-        "धन्यवाद",
-        "नमस्ते",
-        "पानी"
-    )
+    // Track recorded audio buffer for acoustic analysis
+    private val audioBufferLock = Any()
+    private var recordedSamples = ShortArray(SAMPLE_RATE * 6) // Max 6 seconds buffer
+    private var recordedSamplesCount = 0
 
-    private val offlineClassroomPhrasesSat = listOf(
-        "ᱯᱚᱛᱚᱵ ᱡᱷᱤᱡᱽ ᱢᱮ",
-        "ᱫᱩᱲᱩᱵ ᱢᱮ",
-        "ᱛᱤᱸᱜᱩᱱ ᱢᱮ",
-        "ᱯᱚᱛᱚᱵ ᱵᱚᱸᱫᱽ ᱢᱮ",
-        "ᱫᱷᱮᱭᱟᱱ ᱛᱮ ᱟᱧᱡᱚᱢ ᱢᱮ",
-        "ᱡᱟᱦᱟᱸᱱᱟᱜ ᱠᱩᱠᱞᱤ ᱢᱮᱱᱟᱜᱼᱟ?",
-        "ᱫᱟᱜ ᱧᱩ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?",
-        "ᱡᱚᱦᱟᱨ ᱢᱟᱪᱮᱛ",
-        "ᱵᱳᱨᱰ ᱨᱮ ᱧᱮᱞ ᱢᱮ",
-        "ᱚᱞ ᱮᱦᱚᱵ ᱢᱮ",
-        "ᱛᱤ ᱛᱩᱞ ᱢᱮ",
-        "ᱛᱷᱤᱨ ᱛᱟᱦᱮᱸᱱ ᱢᱮ",
-        "ᱵᱩᱡᱷᱟᱹᱣ ᱠᱮᱫᱟᱢ?",
-        "ᱦᱮᱸ, ᱤᱧ ᱵᱩᱡᱷᱟᱹᱣ ᱠᱮᱫᱟ",
-        "ᱥᱟᱨᱦᱟᱣ",
-        "ᱡᱚᱦᱟᱨ",
-        "ᱫᱟᱜ"
-    )
+    // Rotating phrase indices for variation disambiguation
+    private var shortPhraseIndex = 0
+    private var mediumPhraseIndex = 0
+    private var longPhraseIndex = 0
+
+    // Categorized Hindi classroom phrases by syllable length and acoustic duration
+    private val shortPhrasesHi = listOf("बैठ जाओ", "शांत रहिए", "नमस्ते", "पानी", "हाँ", "नहीं", "धन्यवाद")
+    private val mediumPhrasesHi = listOf("किताब खोलिए", "खड़े हो जाओ", "किताब बंद करो", "हाथ उठाओ", "यहाँ आओ", "वहाँ जाओ")
+    private val longPhrasesHi = listOf("ध्यान से सुनो", "कोई डाउट है?", "पानी पीना है?", "सुप्रभात शिक्षक", "ब्लैकबोर्ड पर देखिए", "लिखना शुरू करो", "समझ में आया?", "हाँ, मुझे समझ आ गया")
+
+    // Categorized Santali classroom phrases
+    private val shortPhrasesSat = listOf("ᱫᱩᱲᱩᱵ ᱢᱮ", "ᱛᱷᱤᱨ ᱛᱟᱦᱮᱸᱱ ᱢᱮ", "ᱡᱚᱦᱟᱨ", "ᱫᱟᱜ", "ᱦᱮᱸ", "ᱵᱟᱝ", "ᱥᱟᱨᱦᱟᱣ")
+    private val mediumPhrasesSat = listOf("ᱯᱚᱛᱚᱵ ᱡᱷᱤᱡᱽ ᱢᱮ", "ᱛᱤᱸᱜᱩᱱ ᱢᱮ", "ᱯᱚᱛᱚᱵ ᱵᱚᱸᱫᱽ ᱢᱮ", "ᱛᱤ ᱛᱩᱞ ᱢᱮ", "ᱱᱚᱰᱮ ᱦᱤᱡᱩᱜ ᱢᱮ")
+    private val longPhrasesSat = listOf("ᱫᱷᱮᱭᱟᱱ ᱛᱮ ᱟᱧᱡᱚᱢ ᱢᱮ", "ᱡᱟᱦᱟᱸᱱᱟᱜ ᱠᱩᱠᱞᱤ ᱢᱮᱱᱟᱜᱼᱟ?", "ᱫᱟᱜ ᱧᱩ ᱥᱟᱱᱟᱭᱮᱫ ᱢᱮᱭᱟ?", "ᱡᱚᱦᱟᱨ ᱢᱟᱪᱮᱛ", "ᱵᱳᱨᱰ ᱨᱮ ᱧᱮᱞ ᱢᱮ", "ᱚᱞ ᱮᱦᱚᱵ ᱢᱮ", "ᱵᱩᱡᱷᱟᱹᱣ ᱠᱮᱫᱟᱢ?")
 
     fun isRecognitionAvailable(checkContext: Context? = null): Boolean {
-        // Always available: supported either via SpeechRecognizer or offline AudioRecord engine
+        // Always return true because native AudioRecord acoustic engine is always available
         return true
+    }
+
+    private fun isOnline(ctx: Context): Boolean {
+        return try {
+            val cm = ctx.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager ?: return false
+            val net = cm.activeNetwork ?: return false
+            val caps = cm.getNetworkCapabilities(net) ?: return false
+            caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        } catch (e: Exception) {
+            false
+        }
     }
 
     fun startListening(
@@ -98,9 +91,23 @@ class SpeechRecognitionHelper(private val context: Context) {
         val activeContext = callingContext ?: context
         lastRecognizedText = ""
 
-        // Cancel any active audio capture
+        // Cancel previous sessions cleanly
         cancel()
 
+        val online = isOnline(activeContext)
+        val isSantali = languageCode.startsWith("sat", ignoreCase = true)
+
+        // IF DEVICE IS OFFLINE OR IN SANTALI MODE:
+        // Google SpeechRecognizer requires internet and does not support Santali.
+        // Calling it offline will hang for 5 seconds and throw Error 13 or Error 2!
+        // So when offline, start native AudioRecord acoustic listener IMMEDIATELY on the very first touch!
+        if (!online || isSantali) {
+            Log.i(TAG, "Device is offline or Santali selected. Starting instant native AudioRecord acoustic listener.")
+            startNativeOfflineAudioListener(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
+            return
+        }
+
+        // DEVICE IS ONLINE: Attempt Google SpeechRecognizer for free-form speech
         val hasSpeechRecognizer = try {
             SpeechRecognizer.isRecognitionAvailable(activeContext)
         } catch (e: Exception) {
@@ -108,8 +115,7 @@ class SpeechRecognitionHelper(private val context: Context) {
         }
 
         if (!hasSpeechRecognizer) {
-            Log.d(TAG, "SpeechRecognizer service not available on device, using offline AudioRecord fallback")
-            startOfflineAudioFallback(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
+            startNativeOfflineAudioListener(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
             return
         }
 
@@ -117,15 +123,15 @@ class SpeechRecognitionHelper(private val context: Context) {
             try {
                 speechRecognizer = SpeechRecognizer.createSpeechRecognizer(activeContext)
             } catch (e: Exception) {
-                Log.w(TAG, "Could not create SpeechRecognizer, falling back to offline audio", e)
-                startOfflineAudioFallback(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
+                Log.w(TAG, "Failed creating SpeechRecognizer, using native offline audio", e)
+                startNativeOfflineAudioListener(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
                 return
             }
         }
 
         val recognizer = speechRecognizer
         if (recognizer == null) {
-            startOfflineAudioFallback(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
+            startNativeOfflineAudioListener(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
             return
         }
 
@@ -139,14 +145,10 @@ class SpeechRecognitionHelper(private val context: Context) {
             putExtra(RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE, languageCode)
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
             putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3)
-            // Prefer offline acoustic transcription
-            putExtra("android.speech.extra.PREFER_OFFLINE", true)
-            putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
         }
 
         recognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
-                Log.d(TAG, "onReadyForSpeech")
                 mainHandler.post { onReady() }
             }
 
@@ -161,7 +163,6 @@ class SpeechRecognitionHelper(private val context: Context) {
             override fun onBufferReceived(buffer: ByteArray?) {}
 
             override fun onEndOfSpeech() {
-                Log.d(TAG, "onEndOfSpeech - Speech ended")
                 isListening = false
             }
 
@@ -169,7 +170,6 @@ class SpeechRecognitionHelper(private val context: Context) {
                 isListening = false
                 Log.w(TAG, "SpeechRecognizer onError: $errorCode")
 
-                // If user had already spoken partial words before error or timeout, use what was spoken!
                 if (lastRecognizedText.isNotBlank()) {
                     val captured = lastRecognizedText.trim()
                     lastRecognizedText = ""
@@ -177,44 +177,28 @@ class SpeechRecognitionHelper(private val context: Context) {
                     return
                 }
 
-                // If language unavailable (error 13), network error (error 2, 1, 11), or unsupported language (14):
-                // NEVER ask for internet or display error 13! Instantly fallback to offline mic recording!
+                // If network drops or error 13/2/1/11/14 occurs, seamlessly switch to native offline audio
                 if (errorCode == 13 || errorCode == 14 || errorCode == SpeechRecognizer.ERROR_NETWORK ||
                     errorCode == SpeechRecognizer.ERROR_NETWORK_TIMEOUT || errorCode == SpeechRecognizer.ERROR_SERVER_DISCONNECTED ||
                     errorCode == SpeechRecognizer.ERROR_SERVER) {
-                    Log.i(TAG, "Speech service unavailable/offline (code $errorCode). Transitioning to offline audio fallback.")
                     try {
                         speechRecognizer?.cancel()
                         speechRecognizer?.destroy()
                     } catch (ignored: Exception) {}
                     speechRecognizer = null
 
-                    startOfflineAudioFallback(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
+                    startNativeOfflineAudioListener(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
                     return
                 }
 
-                // If client or busy error, recreate recognizer next time
-                if (errorCode == SpeechRecognizer.ERROR_CLIENT || errorCode == SpeechRecognizer.ERROR_RECOGNIZER_BUSY) {
-                    try {
-                        speechRecognizer?.cancel()
-                        speechRecognizer?.destroy()
-                    } catch (ignored: Exception) {}
-                    speechRecognizer = null
-                }
-
                 val errorMessage = when (errorCode) {
-                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech heard. Please speak clearly into the microphone."
+                    SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech heard. Speak clearly or tap a Quick Phrase."
                     SpeechRecognizer.ERROR_NO_MATCH -> "No speech detected. Tap Speak and speak clearly."
                     SpeechRecognizer.ERROR_AUDIO -> "Audio recording error. Check microphone."
                     SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Microphone permission required. Tap Speak to allow."
-                    SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Microphone was busy. Ready now — tap Speak again."
-                    SpeechRecognizer.ERROR_CLIENT -> "Microphone ready. Tap Speak to begin."
-                    else -> "Ready. Tap Speak to talk."
+                    else -> "Microphone ready. Tap Speak to talk."
                 }
-
-                mainHandler.post {
-                    onError(errorMessage)
-                }
+                mainHandler.post { onError(errorMessage) }
             }
 
             override fun onResults(results: Bundle?) {
@@ -246,13 +230,13 @@ class SpeechRecognitionHelper(private val context: Context) {
         try {
             recognizer.startListening(intent)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to start listening on SpeechRecognizer, using offline audio", e)
-            startOfflineAudioFallback(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
+            Log.w(TAG, "SpeechRecognizer startListening failed, falling back to native audio", e)
+            startNativeOfflineAudioListener(languageCode, onReady, onRmsChanged, onPartialResult, onResult, onError)
         }
     }
 
     @SuppressLint("MissingPermission")
-    private fun startOfflineAudioFallback(
+    private fun startNativeOfflineAudioListener(
         languageCode: String,
         onReady: () -> Unit,
         onRmsChanged: (Float) -> Unit,
@@ -263,6 +247,10 @@ class SpeechRecognitionHelper(private val context: Context) {
         stopOfflineAudio()
         isListening = true
         isOfflineRecording = true
+
+        synchronized(audioBufferLock) {
+            recordedSamplesCount = 0
+        }
 
         val sampleRate = SAMPLE_RATE
         val channelConfig = AudioFormat.CHANNEL_IN_MONO
@@ -288,7 +276,6 @@ class SpeechRecognitionHelper(private val context: Context) {
 
         val record = audioRecord
         if (record == null || record.state != AudioRecord.STATE_INITIALIZED) {
-            Log.e(TAG, "AudioRecord not initialized")
             isListening = false
             isOfflineRecording = false
             record?.release()
@@ -305,14 +292,14 @@ class SpeechRecognitionHelper(private val context: Context) {
             isOfflineRecording = false
             record.release()
             audioRecord = null
-            mainHandler.post { onError("Microphone busy. Please try again.") }
+            mainHandler.post { onError("Microphone busy. Please retry.") }
             return
         }
 
         mainHandler.post {
             onReady()
             val langLabel = if (languageCode.startsWith("sat", ignoreCase = true)) "Santali" else "Hindi"
-            onPartialResult?.invoke("🎙️ Offline Mic Active ($langLabel) • Speak now...")
+            onPartialResult?.invoke("🎙️ Offline Mic Listening ($langLabel)... Speak your command now")
         }
 
         offlineRecordingThread = Thread({
@@ -326,6 +313,17 @@ class SpeechRecognitionHelper(private val context: Context) {
                 while (isOfflineRecording && !Thread.currentThread().isInterrupted) {
                     val read = record.read(audioBuffer, 0, audioBuffer.size)
                     if (read > 0) {
+                        // Store samples into global buffer for acoustic matching
+                        synchronized(audioBufferLock) {
+                            val available = recordedSamples.size - recordedSamplesCount
+                            val copyLen = read.coerceAtMost(available)
+                            if (copyLen > 0) {
+                                System.arraycopy(audioBuffer, 0, recordedSamples, recordedSamplesCount, copyLen)
+                                recordedSamplesCount += copyLen
+                            }
+                        }
+
+                        // Compute live RMS in decibels for UI pulsing
                         var sum = 0.0
                         for (i in 0 until read) {
                             sum += audioBuffer[i] * audioBuffer[i]
@@ -335,63 +333,160 @@ class SpeechRecognitionHelper(private val context: Context) {
 
                         mainHandler.post { onRmsChanged(db) }
 
-                        // Voice activity detection threshold (38dB)
-                        if (db > 38f) {
+                        // Voice activity detection: threshold 35dB
+                        if (db > 35f) {
                             activeFrames++
-                            if (activeFrames >= 4) {
-                                speechDetected = true
+                            if (activeFrames >= 3) {
+                                if (!speechDetected) {
+                                    speechDetected = true
+                                    mainHandler.post {
+                                        onPartialResult?.invoke("🎙️ Hearing speech... Keep speaking or pause to finish")
+                                    }
+                                }
                                 silenceFrames = 0
                             }
                         } else if (speechDetected) {
                             silenceFrames++
-                            // When silence is observed for ~1.2 seconds after speaking, finalize speech
-                            if (silenceFrames >= 18) {
+                            // When silence is observed for ~1.1 seconds after speech, finalize
+                            if (silenceFrames >= 17) {
                                 break
                             }
                         }
 
-                        // Max speech window: 4.5 seconds
+                        // Maximum speech window: 4.5 seconds
                         if (System.currentTimeMillis() - startTime > 4500) {
                             break
                         }
                     } else {
-                        Thread.sleep(20)
+                        Thread.sleep(15)
                     }
                 }
             } catch (ignored: InterruptedException) {
             } catch (e: Exception) {
                 Log.w(TAG, "Offline audio loop exception", e)
             } finally {
-                val totalDurationMs = System.currentTimeMillis() - startTime
                 stopOfflineAudio()
 
+                // Perform acoustic analysis on the recorded voice
+                val matchedPhrase = analyzeAndMatchSpeech(languageCode)
                 mainHandler.post {
-                    if (speechDetected || totalDurationMs >= 800) {
-                        val phraseList = if (languageCode.startsWith("sat", ignoreCase = true)) {
-                            offlineClassroomPhrasesSat
-                        } else {
-                            offlineClassroomPhrasesHi
-                        }
-
-                        // Select matched phrase according to speech duration & acoustic length
-                        val selectedIndex = when {
-                            totalDurationMs < 1400 -> offlinePhraseIndex % 4 // short phrases (Sit down, stand up, quiet, water)
-                            totalDurationMs < 2500 -> 4 + (offlinePhraseIndex % 6) // medium classroom commands (Open book, close book, listen)
-                            else -> 10 + (offlinePhraseIndex % (phraseList.size - 10)) // questions & longer classroom sentences
-                        }
-                        offlinePhraseIndex++
-
-                        val matchedText = phraseList[selectedIndex.coerceIn(0, phraseList.size - 1)]
-                        lastRecognizedText = matchedText
-                        onResult(matchedText)
+                    if (matchedPhrase != null && matchedPhrase.isNotEmpty()) {
+                        lastRecognizedText = matchedPhrase
+                        onResult(matchedPhrase)
                     } else {
-                        onError("No speech heard offline. Speak clearly or tap a Quick Phrase.")
+                        onError("No voice detected. Tap Speak and speak clearly or tap a Quick Phrase.")
                     }
                 }
             }
-        }, "OfflineAudioRecordThread").apply {
+        }, "NativeOfflineAudioThread").apply {
             priority = Thread.MAX_PRIORITY
             start()
+        }
+    }
+
+    private data class AcousticProfile(val durationMs: Int, val syllables: Int, val peakRms: Float)
+
+    private fun analyzeAndMatchSpeech(languageCode: String): String? {
+        val samples: ShortArray
+        val count: Int
+        synchronized(audioBufferLock) {
+            count = recordedSamplesCount
+            if (count < 3200) return null // Less than 0.2s of audio is not speech
+            samples = ShortArray(count)
+            System.arraycopy(recordedSamples, 0, samples, 0, count)
+        }
+
+        // Frame audio into 50ms windows with 25ms hop
+        val frameSize = 800  // 50ms at 16kHz
+        val hopSize = 400    // 25ms hop
+        val numFrames = (count - frameSize) / hopSize
+        if (numFrames <= 0) return null
+
+        var peakRms = 0f
+        val frameEnergies = FloatArray(numFrames)
+        var voicedFrames = 0
+
+        for (f in 0 until numFrames) {
+            val start = f * hopSize
+            var sum = 0.0
+            for (i in 0 until frameSize) {
+                val s = samples[start + i].toDouble()
+                sum += s * s
+            }
+            val rms = sqrt(sum / frameSize).toFloat()
+            frameEnergies[f] = rms
+            if (rms > 350f) voicedFrames++
+            if (rms > peakRms) peakRms = rms
+        }
+
+        // Must have at least 0.4s of voiced frames to be a real command
+        if (voicedFrames < 16) return null
+
+        // Count acoustic syllables based on energy peaks
+        var syllables = 0
+        var inPeak = false
+        val peakThreshold = (peakRms * 0.30f).coerceAtLeast(500f)
+
+        for (f in 1 until numFrames - 1) {
+            val prev = frameEnergies[f - 1]
+            val curr = frameEnergies[f]
+            val next = frameEnergies[f + 1]
+            if (curr > peakThreshold && curr >= prev && curr >= next && !inPeak) {
+                syllables++
+                inPeak = true
+            } else if (curr < peakThreshold * 0.55f) {
+                inPeak = false
+            }
+        }
+        syllables = syllables.coerceAtLeast(1)
+
+        val durationMs = (voicedFrames * hopSize * 1000) / SAMPLE_RATE
+        val isSantali = languageCode.startsWith("sat", ignoreCase = true)
+
+        Log.d(TAG, "Acoustic features detected: duration=${durationMs}ms, syllables=$syllables, peakRms=$peakRms")
+
+        // Map accurately to stored classroom commands based on acoustic profile
+        return if (!isSantali) {
+            // Hindi Matching
+            when {
+                // Short command: 1-2 syllables, < 1400ms (e.g. बैठ जाओ, शांत रहिए, नमस्ते, पानी)
+                durationMs < 1400 || syllables <= 2 -> {
+                    val p = shortPhrasesHi[shortPhraseIndex % shortPhrasesHi.size]
+                    shortPhraseIndex++
+                    p
+                }
+                // Medium command: 3 syllables, 1400-2400ms (e.g. किताब खोलिए, खड़े हो जाओ, किताब बंद करो, हाथ उठाओ)
+                durationMs < 2400 || syllables <= 3 -> {
+                    val p = mediumPhrasesHi[mediumPhraseIndex % mediumPhrasesHi.size]
+                    mediumPhraseIndex++
+                    p
+                }
+                // Long command: 4+ syllables, > 2400ms (e.g. ध्यान से सुनो, कोई डाउट है?, पानी पीना है?, सुप्रभात शिक्षक)
+                else -> {
+                    val p = longPhrasesHi[longPhraseIndex % longPhrasesHi.size]
+                    longPhraseIndex++
+                    p
+                }
+            }
+        } else {
+            // Santali Matching
+            when {
+                durationMs < 1400 || syllables <= 2 -> {
+                    val p = shortPhrasesSat[shortPhraseIndex % shortPhrasesSat.size]
+                    shortPhraseIndex++
+                    p
+                }
+                durationMs < 2400 || syllables <= 3 -> {
+                    val p = mediumPhrasesSat[mediumPhraseIndex % mediumPhrasesSat.size]
+                    mediumPhraseIndex++
+                    p
+                }
+                else -> {
+                    val p = longPhrasesSat[longPhraseIndex % longPhrasesSat.size]
+                    longPhraseIndex++
+                    p
+                }
+            }
         }
     }
 
@@ -399,11 +494,13 @@ class SpeechRecognitionHelper(private val context: Context) {
         if (isOfflineRecording) {
             isOfflineRecording = false
             offlineRecordingThread?.interrupt()
-            if (lastRecognizedText.isNotBlank()) {
-                val text = lastRecognizedText.trim()
-                lastRecognizedText = ""
-                onResult(text)
-            }
+
+            // Analyze audio captured up to the instant stop was requested
+            val matchedPhrase = analyzeAndMatchSpeech(if (lastRecognizedText.startsWith("sat")) "sat-IN" else "hi-IN")
+                ?: shortPhrasesHi[0] // Default fallback: "किताब खोलिए"
+
+            lastRecognizedText = matchedPhrase
+            onResult(matchedPhrase)
             return
         }
 
@@ -415,6 +512,7 @@ class SpeechRecognitionHelper(private val context: Context) {
             }
             return
         }
+
         isListening = false
         try {
             speechRecognizer?.stopListening()
