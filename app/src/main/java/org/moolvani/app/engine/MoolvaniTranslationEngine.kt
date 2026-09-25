@@ -577,6 +577,36 @@ class MoolvaniTranslationEngine(
         }
 
         if (from == Language.HINDI) {
+            // STEP 0.5: Multi-clause / Combined sentence support (e.g. "बैठ जाओ और किताब खोलो", "खड़े हो जाओ और यहाँ आओ")
+            val clauseSplitters = listOf(" और ", " तथा ", " फिर ", " and ", " & ", ", ", "। ")
+            for (splitter in clauseSplitters) {
+                if (trimmed.contains(splitter, ignoreCase = true)) {
+                    val parts = trimmed.split(splitter.toRegex(RegexOption.IGNORE_CASE))
+                        .map { it.trim() }
+                        .filter { it.isNotEmpty() }
+                    if (parts.size >= 2) {
+                        val subResults = parts.map { translate(it, from, to) }
+                        val combinedOlChiki = subResults.joinToString(" ᱟᱨ ") { it.targetOlChiki }
+                        val combinedRoman = subResults.joinToString(" ar ") { it.targetRoman }
+                        val combinedDevanagari = subResults.joinToString(" और ") { it.targetDevanagari.ifEmpty { it.sourceText } }
+                        val avgConfidence = subResults.map { it.confidence }.average().toFloat()
+                        val latency = System.currentTimeMillis() - startTime
+                        return TranslationResult(
+                            sourceText = trimmed,
+                            sourceLang = from,
+                            targetLang = to,
+                            targetOlChiki = combinedOlChiki,
+                            targetRoman = combinedRoman,
+                            targetDevanagari = combinedDevanagari,
+                            confidence = avgConfidence,
+                            latencyMs = latency,
+                            isExactMatch = subResults.all { it.isExactMatch },
+                            matchedCategory = "Combined Command"
+                        )
+                    }
+                }
+            }
+
             // STEP 1: Direct match against stored classroom phrases and all known spoken variants
             val directClassroom = findDirectClassroomPhrase(norm)
             if (directClassroom != null) {

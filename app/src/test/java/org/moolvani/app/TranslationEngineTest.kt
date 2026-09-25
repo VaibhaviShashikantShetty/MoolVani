@@ -112,4 +112,19 @@ class TranslationEngineTest {
         assertEquals("ᱥᱟᱨᱦᱟᱣ", thankYou.targetOlChiki)
         assertEquals("Sarhaw", thankYou.targetRoman)
     }
+
+    @Test
+    fun testCombinedSentencesTranslation() {
+        val sitAndOpen = engine.translate("बैठ जाओ और किताब खोलो", Language.HINDI, Language.SANTHALI)
+        assertEquals("ᱫᱩᱲᱩᱵ ᱢᱮ ᱟᱨ ᱯᱚᱛᱚᱵ ᱡᱷᱤᱡᱽ ᱢᱮ", sitAndOpen.targetOlChiki)
+        assertEquals("Durub me ar Potob jhij me", sitAndOpen.targetRoman)
+
+        val quietAndListen = engine.translate("शांत रहो और ध्यान से सुनो", Language.HINDI, Language.SANTHALI)
+        assertEquals("ᱛᱷᱤᱨ ᱛᱟᱦᱮᱸᱱ ᱢᱮ ᱟᱨ ᱫᱷᱮᱭᱟᱱ ᱛᱮ ᱟᱧᱡᱚᱢ ᱢᱮ", quietAndListen.targetOlChiki)
+        assertEquals("Thir tahen me ar Dheyan te anjom me", quietAndListen.targetRoman)
+
+        val standAndCome = engine.translate("खड़े हो जाओ और यहाँ आओ", Language.HINDI, Language.SANTHALI)
+        assertEquals("ᱛᱤᱸᱜᱩᱱ ᱢᱮ ᱟᱨ ᱱᱚᱸᱰᱮ ᱦᱤᱡᱩᱜ ᱢᱮ", standAndCome.targetOlChiki)
+        assertEquals("Tingun me ar Nonde hijug me", standAndCome.targetRoman)
+    }
 }
