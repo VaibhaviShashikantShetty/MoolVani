@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_screen">
+
+    <!-- Top Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/navy_primary"
+        android:paddingHorizontal="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_back_worksheet"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Back"
+            app:tint="@color/white" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Worksheet &amp; Assessment"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bilingual Offline Evaluation"
+                android:textColor="#94A3B8"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_new_worksheet"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="New Quiz 🔄"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/navy_accent" />
+    </LinearLayout>
+
+    <!-- Score & Progress Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
+        android:elevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_q_counter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Question 1 of 8"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/navy_primary" />
+
+            <TextView
+                android:id="@+id/tv_score_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Score: 0 / 0"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/action_translate"
+                android:background="#CCFBF1"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_quiz"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:max="100"
+            android:progress="12"
+            android:progressTint="@color/navy_accent"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Question Card -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tv_q_type_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PICTURE IDENTIFICATION"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/navy_accent"
+                        android:background="#EFF6FF"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="3dp"
+                        android:layout_marginBottom="10dp" />
+
+                    <!-- Question Prompts in Hindi and Santhali -->
+                    <TextView
+                        android:id="@+id/tv_q_prompt_hindi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="चित्र देखकर सही संथाली नाम चुनिए:"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/navy_primary" />
+
+                    <TextView
+                        android:id="@+id/tv_q_prompt_santhali"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="ᱪᱤᱛᱟᱹᱨ ᱧᱮᱞ ᱠᱟᱛᱮ ᱧᱩᱛᱩᱢ ᱵᱟᱪᱷᱟᱣ ᱢᱮ"
+                        android:textSize="16sp"
+                        android:textColor="@color/navy_accent"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Big Image Emoji (for picture questions) -->
+                    <TextView
+                        android:id="@+id/tv_q_image_emoji"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🐘"
+                        android:textSize="64sp"
+                        android:gravity="center"
+                        android:layout_marginVertical="14dp"
+                        android:visibility="visible" />
+
+                    <!-- Options Container (MCQ / Picture / Blank) -->
+                    <RadioGroup
+                        android:id="@+id/rg_options"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="8dp" />
+
+                    <!-- Matching Container (for MATCHING type) -->
+                    <LinearLayout
+                        android:id="@+id/matching_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="8dp" />
+
+                    <!-- Feedback / Explanation banner -->
+                    <LinearLayout
+                        android:id="@+id/feedback_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#DCFCE7"
+                        android:padding="12dp"
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_feedback_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="✅ शाबाश! बिल्कुल सही उत्तर!"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/success_green" />
+
+                        <TextView
+                            android:id="@+id/tv_feedback_explanation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="हाथी को संथाली में ᱦᱟᱹᱛᱤ (Hati) कहते हैं।"
+                            android:textSize="13sp"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Bottom Navigation / Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="20dp">
+
+                <Button
+                    android:id="@+id/btn_listen_q_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"
+                    android:text="Pronounce 🔊"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/navy_primary"
+                    android:backgroundTint="#E2E8F0"
+                    android:layout_marginEnd="10dp" />
+
+                <Button
+                    android:id="@+id/btn_action_quiz"
+                    android:layout_width="0dp"
+                    android:layout_height="52dp"
+                    android:layout_weight="1"
+                    android:text="Check Answer"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/navy_primary" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
