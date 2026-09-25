@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Category tag & custom badge -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tv_card_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Classroom"
+                android:textSize="11sp"
+                android:textColor="@color/navy_accent"
+                android:textStyle="bold"
+                android:background="#EFF6FF"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="2dp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Quick Play Audio Button -->
+            <ImageButton
+                android:id="@+id/btn_card_play_audio"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_pill_button"
+                android:src="@drawable/ic_volume_up"
+                android:contentDescription="Play Audio"
+                app:tint="@color/white" />
+        </LinearLayout>
+
+        <!-- Hindi text (as prominently drawn in the sketch boxes) -->
+        <TextView
+            android:id="@+id/tv_phrase_hindi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="किताब खोलिए"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/navy_primary"
+            android:lineSpacingExtra="2dp" />
+
+        <!-- Santhali Ol Chiki text -->
+        <TextView
+            android:id="@+id/tv_phrase_olchiki"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ᱯᱚᱛᱚᱵ ᱡᱷᱤᱡᱽ ᱢᱮ"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/navy_accent"
+            android:layout_marginTop="6dp" />
+
+        <!-- Roman Transliteration -->
+        <TextView
+            android:id="@+id/tv_phrase_roman"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Potob jhij me"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary"
+            android:textStyle="italic"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
