@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@drawable/bg_card_rounded">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+ Upload Teaching Material"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/navy_primary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add new lesson content. MoolVani will automatically generate Santhali translation and phonetic audio."
+        android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Course Module:"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary" />
+
+    <Spinner
+        android:id="@+id/spinner_course_target"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_pill_outline"
+        android:paddingHorizontal="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vocabulary / Text in Hindi:"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary" />
+
+    <EditText
+        android:id="@+id/et_upload_hindi"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_pill_outline"
+        android:hint="e.g. मोर (Peacock)"
+        android:textSize="14sp"
+        android:paddingHorizontal="14dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Santhali Ol Chiki (Optional, auto-generated if blank):"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary" />
+
+    <EditText
+        android:id="@+id/et_upload_olchiki"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_pill_outline"
+        android:hint="e.g. ᱢᱟᱨᱟᱜ (Marag)"
+        android:textSize="14sp"
+        android:paddingHorizontal="14dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Icon Emoji:"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary" />
+
+    <EditText
+        android:id="@+id/et_upload_emoji"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_pill_outline"
+        android:hint="🦚"
+        android:textSize="18sp"
+        android:paddingHorizontal="14dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="20dp" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btn_upload_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="Cancel"
+            android:textColor="@color/text_secondary"
+            android:backgroundTint="#F1F5F9"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btn_upload_save"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="Upload &amp; Store"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/navy_primary" />
+    </LinearLayout>
+
+</LinearLayout>
