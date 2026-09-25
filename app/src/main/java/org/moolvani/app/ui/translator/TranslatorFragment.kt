@@ -232,13 +232,18 @@ class TranslatorFragment : Fragment() {
             },
             onResult = { recognizedText ->
                 stopMicPulseAnimation()
-                binding.tvMicStatus.text = "Speech recognized! Translating..."
+                // STEP 3: Display the recognized transcription on screen before the translation
                 binding.etSourceInput.setText(recognizedText)
+                binding.tvMicStatus.text = "Recognized: '$recognizedText'"
+
+                // STEP 4: Translate only the recognized transcription into Santhali
                 performTranslation(recognizedText)
             },
             onError = { error ->
                 stopMicPulseAnimation()
+                // STEP 6: Fallback for low-confidence recognition
                 binding.tvMicStatus.text = error
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
             }
         )
     }
