@@ -1,0 +1,37 @@
+<resources>
+    <!-- Navy Palette -->
+    <color name="navy_primary">#0F2042</color>
+    <color name="navy_dark">#0A152C</color>
+    <color name="navy_light">#1E293B</color>
+    <color name="navy_accent">#1D4ED8</color>
+    <color name="navy_accent_light">#DBEAFE</color>
+    <color name="navy_surface_selected">#1E3A8A</color>
+
+    <!-- Neutral & Backgrounds -->
+    <color name="bg_screen">#F1F5F9</color>
+    <color name="bg_card">#FFFFFF</color>
+    <color name="card_stroke">#E2E8F0</color>
+    <color name="card_stroke_active">#3B82F6</color>
+    <color name="divider_color">#CBD5E1</color>
+
+    <!-- Typography -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_tertiary">#94A3B8</color>
+    <color name="text_on_navy">#FFFFFF</color>
+    <color name="text_on_navy_secondary">#94A3B8</color>
+
+    <!-- Action Colors -->
+    <color name="action_speak">#DC2626</color>
+    <color name="action_speak_light">#FEE2E2</color>
+    <color name="action_translate">#0D9488</color>
+    <color name="action_repeat">#D97706</color>
+    <color name="action_store">#2563EB</color>
+    <color name="success_green">#16A34A</color>
+    <color name="success_green_bg">#DCFCE7</color>
+    <color name="amber_warning">#F59E0B</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>
