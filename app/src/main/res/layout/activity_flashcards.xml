@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_screen">
+
+    <!-- Top App Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/navy_primary"
+        android:paddingHorizontal="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_back_flashcards"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="Back"
+            app:tint="@color/white" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bilingual Flashcards"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_fc_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Card 1 of 36"
+                android:textColor="#94A3B8"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_shuffle_cards"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_mic_circle"
+            android:src="@drawable/ic_shuffle"
+            android:contentDescription="Shuffle Cards"
+            app:tint="@color/navy_primary" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <!-- Flashcard Viewport -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_flip_container"
+            android:layout_width="match_parent"
+            android:layout_height="340dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="@color/white"
+            android:clickable="true"
+            android:focusable="true">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- FRONT OF CARD: Image + Hindi -->
+                <LinearLayout
+                    android:id="@+id/card_front_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="24dp"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tv_fc_front_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ANIMALS (ᱡᱤᱭᱟᱹᱞᱤ)"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/navy_accent"
+                        android:background="#EFF6FF"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="4dp"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Image / Emoji -->
+                    <TextView
+                        android:id="@+id/tv_fc_front_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🐘"
+                        android:textSize="72sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Hindi Word -->
+                    <TextView
+                        android:id="@+id/tv_fc_front_hindi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="हाथी"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/navy_primary" />
+
+                    <TextView
+                        android:id="@+id/tv_fc_front_meaning"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(Elephant)"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔄 Tap to reveal Santhali (Ol Chiki)"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_tertiary"
+                        android:layout_marginTop="20dp" />
+                </LinearLayout>
+
+                <!-- BACK OF CARD: Santhali in Ol Chiki + Roman + Audio -->
+                <LinearLayout
+                    android:id="@+id/card_back_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="#F8FAFC"
+                    android:padding="24dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_fc_back_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SANTHALI OL CHIKI"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/action_repeat"
+                        android:background="#FEF3C7"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="4dp"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Santhali Ol Chiki Word -->
+                    <TextView
+                        android:id="@+id/tv_fc_back_olchiki"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ᱦᱟᱹᱛᱤ"
+                        android:textSize="44sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/navy_primary" />
+
+                    <!-- Roman Transliteration -->
+                    <TextView
+                        android:id="@+id/tv_fc_back_roman"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hati"
+                        android:textSize="22sp"
+                        android:textStyle="italic"
+                        android:textColor="@color/navy_accent"
+                        android:layout_marginTop="6dp" />
+
+                    <TextView
+                        android:id="@+id/tv_fc_back_hindi_ref"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hindi: हाथी • Elephant"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="4dp" />
+
+                    <!-- Audio Playback Button -->
+                    <Button
+                        android:id="@+id/btn_fc_play_audio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="Listen Audio 🔊"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/navy_primary"
+                        android:layout_marginTop="20dp"
+                        android:paddingHorizontal="20dp" />
+                </LinearLayout>
+
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Bottom Controls matching prompt: Next / Previous / Shuffle / Play / Flip -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="28dp">
+
+            <!-- Previous Button -->
+            <Button
+                android:id="@+id/btn_fc_prev"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="◀ Prev"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/navy_primary"
+                android:backgroundTint="#E2E8F0"
+                android:layout_marginEnd="8dp" />
+
+            <!-- Flip Button -->
+            <Button
+                android:id="@+id/btn_fc_flip"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="Flip 🔄"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/navy_accent"
+                android:layout_marginHorizontal="4dp" />
+
+            <!-- Audio Play Button -->
+            <Button
+                android:id="@+id/btn_fc_audio_quick"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="Play 🔊"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/action_repeat"
+                android:layout_marginHorizontal="4dp" />
+
+            <!-- Next Button -->
+            <Button
+                android:id="@+id/btn_fc_next"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:text="Next ▶"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/navy_primary"
+                android:backgroundTint="#E2E8F0"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
