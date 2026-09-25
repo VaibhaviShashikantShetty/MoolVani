@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_screen"
+    android:padding="16dp">
+
+    <!-- Top Bar: Title & Direction Pill matching sketch "Hindi -> Santali" -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Common Phrases (ᱪᱚᱞᱚᱛ ᱠᱟᱛᱷᱟ)"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/navy_primary" />
+
+        <!-- Sketch 2 Bottom Indicator: "Hindi -> Santali" -->
+        <TextView
+            android:id="@+id/tv_direction_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hindi ➔ Santali"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:background="@drawable/bg_pill_button"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="8dp" />
+
+        <!-- Add Phrase Button (+) matching sketch 2 [+] card -->
+        <Button
+            android:id="@+id/btn_add_phrase"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="+ Add Phrase"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/navy_accent"
+            android:layout_marginStart="10dp" />
+    </LinearLayout>
+
+    <!-- Search Input Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_card_rounded"
+        android:paddingHorizontal="12dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🔍"
+            android:textSize="16sp"
+            android:layout_marginEnd="8dp" />
+
+        <EditText
+            android:id="@+id/et_search_phrases"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:hint="Search phrases in Hindi or Santhali..."
+            android:textSize="14sp"
+            android:textColor="@color/text_primary" />
+    </LinearLayout>
+
+    <!-- Category Filter Chips -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            android:id="@+id/category_chips_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <!-- Grid of Phrase Cards matching drawing -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_phrases"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="12dp" />
+
+</LinearLayout>
