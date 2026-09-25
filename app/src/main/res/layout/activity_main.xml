@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/bg_screen">
+
+    <!-- Slim Navigation Rail maximizing content area -->
+    <LinearLayout
+        android:id="@+id/sidebar_container"
+        android:layout_width="84dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@color/navy_primary"
+        android:paddingHorizontal="6dp"
+        android:paddingVertical="10dp">
+
+        <!-- App Branding -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingBottom="10dp"
+            android:paddingTop="4dp">
+
+            <TextView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:text="MV"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="@drawable/bg_nav_selected" />
+
+            <TextView
+                android:id="@+id/tv_app_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MoolVani"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="4dp"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/tv_app_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Santali"
+                android:textSize="9sp"
+                android:textColor="#94A3B8"
+                android:singleLine="true" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#334155"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- Navigation Buttons -->
+        <!-- [RT] Real-Time Translator -->
+        <LinearLayout
+            android:id="@+id/nav_translator"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/bg_nav_selected"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="6dp"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/badge_rt"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="RT"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="@color/navy_primary"
+                android:gravity="center"
+                android:background="@drawable/bg_nav_badge_selected" />
+
+            <TextView
+                android:id="@+id/label_rt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Translator"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:singleLine="true"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- [CP] Common Phrases -->
+        <LinearLayout
+            android:id="@+id/nav_phrases"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="6dp"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/badge_cp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="CP"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="@drawable/bg_nav_badge_unselected" />
+
+            <TextView
+                android:id="@+id/label_cp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phrases"
+                android:textSize="10sp"
+                android:textColor="#94A3B8"
+                android:singleLine="true"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- [C] Courses -->
+        <LinearLayout
+            android:id="@+id/nav_courses"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="6dp"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/badge_c"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="C"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="@drawable/bg_nav_badge_unselected" />
+
+            <TextView
+                android:id="@+id/label_c"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Courses"
+                android:textSize="10sp"
+                android:textColor="#94A3B8"
+                android:singleLine="true"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- [FC] Flash Cards & Others -->
+        <LinearLayout
+            android:id="@+id/nav_interactive"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginBottom="6dp"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/badge_fc"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="FC"
+                android:textStyle="bold"
+                android:textSize="13sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="@drawable/bg_nav_badge_unselected" />
+
+            <TextView
+                android:id="@+id/label_fc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Practice"
+                android:textSize="10sp"
+                android:textColor="#94A3B8"
+                android:singleLine="true"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Bottom status pill -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/bg_nav_badge_unselected"
+            android:paddingVertical="6dp"
+            android:paddingHorizontal="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🟢"
+                android:textSize="8sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Offline"
+                android:textColor="#34D399"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp"
+                android:singleLine="true" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Expansive Main Content Area -->
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+</LinearLayout>
