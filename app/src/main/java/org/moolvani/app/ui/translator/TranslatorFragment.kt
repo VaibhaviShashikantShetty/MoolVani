@@ -225,8 +225,10 @@ class TranslatorFragment : Fragment() {
                 binding.micPulseRing.scaleY = scale
             },
             onPartialResult = { partial ->
-                binding.etSourceInput.setText(partial)
-                binding.tvMicStatus.text = "Hearing: $partial..."
+                binding.tvMicStatus.text = partial
+                if (!partial.startsWith("🎙️")) {
+                    binding.etSourceInput.setText(partial)
+                }
             },
             onResult = { recognizedText ->
                 stopMicPulseAnimation()
