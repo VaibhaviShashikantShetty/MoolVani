@@ -161,6 +161,16 @@ class SanthaliAudioSynthesizer(private val context: Context) : TextToSpeech.OnIn
             }
         }
 
+        // 1B. Check for multi-clause / combined sentences (e.g. "ᱫᱩᱲᱩᱵ ᱢᱮ ᱟᱨ ᱯᱚᱛᱚᱵ ᱡᱷᱤᱡᱽ ᱢᱮ")
+        if (isSanthali && (trimmed.contains(" ᱟᱨ ") || trimmed.contains(", "))) {
+            val delimiter = if (trimmed.contains(" ᱟᱨ ")) " ᱟᱨ " else ", "
+            val parts = trimmed.split(delimiter).map { it.trim() }.filter { it.isNotEmpty() }
+            if (parts.size >= 2) {
+                playSequentialParts(parts, 0, onCompletion)
+                return
+            }
+        }
+
         // 2. Fallback for custom dynamic sentences via Android TextToSpeech
         if (!isTtsReady || tts == null) {
             // Queue request while TTS finishes initialization
@@ -222,6 +232,31 @@ class SanthaliAudioSynthesizer(private val context: Context) : TextToSpeech.OnIn
                 val cb = pendingCompletion
                 pendingCompletion = null
                 cb?.invoke()
+            }
+        }
+    }
+
+    private fun playSequentialParts(parts: List<String>, index: Int, onCompletion: (() -> Unit)?) {
+        if (index >= parts.size) {
+            isPlaying = false
+            onCompletion?.invoke()
+            return
+        }
+
+        val partText = parts[index]
+        val assetPath = AudioCatalog.findSanthaliAsset(partText)
+        if (assetPath != null) {
+            isPlaying = true
+            assetPlayer.playAsset(assetPath, currentSpeed) {
+                mainHandler.postDelayed({
+                    playSequentialParts(parts, index + 1, onCompletion)
+                }, 350)
+            }
+        } else {
+            speak(partText, isSanthali = true) {
+                mainHandler.postDelayed({
+                    playSequentialParts(parts, index + 1, onCompletion)
+                }, 350)
             }
         }
     }
