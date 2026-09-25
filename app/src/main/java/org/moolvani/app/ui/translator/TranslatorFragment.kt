@@ -226,8 +226,14 @@ class TranslatorFragment : Fragment() {
             },
             onPartialResult = { partial ->
                 binding.tvMicStatus.text = partial
-                if (!partial.startsWith("🎙️")) {
-                    binding.etSourceInput.setText(partial)
+                val clean = when {
+                    partial.startsWith("🎙️ Hearing: ") -> partial.removePrefix("🎙️ Hearing: ").trim()
+                    partial.startsWith("🎙️ Recognized: ") -> partial.removePrefix("🎙️ Recognized: ").trim()
+                    partial.startsWith("🎙️") || partial.startsWith("⏳") -> ""
+                    else -> partial.trim()
+                }
+                if (clean.isNotEmpty() && clean != "[unk]") {
+                    binding.etSourceInput.setText(clean)
                 }
             },
             onResult = { recognizedText ->
