@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/bg_screen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Top Language Selector matching diagram: Hindi <-> Santali -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg_card_rounded"
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="16dp"
+            android:elevation="2dp">
+
+            <TextView
+                android:id="@+id/tv_source_lang"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Hindi (हिन्दी)"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textColor="@color/navy_primary"
+                android:gravity="center"
+                android:background="@drawable/bg_pill_outline" />
+
+            <!-- Swap Direction Button -->
+            <ImageButton
+                android:id="@+id/btn_swap_lang"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/bg_mic_circle"
+                android:src="@drawable/ic_swap"
+                android:contentDescription="Swap Translation Direction"
+                app:tint="@color/navy_primary" />
+
+            <TextView
+                android:id="@+id/tv_target_lang"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="Santali (ᱚᱞ ᱪᱤᱠᱤ)"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="@drawable/bg_pill_button" />
+        </LinearLayout>
+
+        <!-- Center Microphone Visualization matching drawing -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginVertical="16dp">
+
+            <FrameLayout
+                android:layout_width="140dp"
+                android:layout_height="140dp">
+
+                <!-- Outer pulsing ring -->
+                <View
+                    android:id="@+id/mic_pulse_ring"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_mic_circle"
+                    android:alpha="0.3" />
+
+                <!-- Center mic button -->
+                <ImageView
+                    android:id="@+id/iv_center_mic"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_mic_circle"
+                    android:padding="28dp"
+                    android:src="@drawable/ic_mic"
+                    app:tint="@color/navy_primary"
+                    android:contentDescription="Microphone Visual" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_mic_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap Speak to record or choose a classroom phrase below"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- Four Main Action Buttons matching drawing & prompt -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <!-- 1. Speak Button -->
+            <Button
+                android:id="@+id/btn_speak"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_weight="1"
+                android:text="Speak"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/action_speak"
+                android:drawableStart="@drawable/ic_mic"
+                android:layout_marginEnd="6dp" />
+
+            <!-- 2. Translate Button -->
+            <Button
+                android:id="@+id/btn_translate"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_weight="1"
+                android:text="Translate"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/action_translate"
+                android:drawableStart="@drawable/ic_translate"
+                android:layout_marginHorizontal="6dp" />
+
+            <!-- 3. Repeat Button -->
+            <Button
+                android:id="@+id/btn_repeat"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_weight="1"
+                android:text="Repeat"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/action_repeat"
+                android:drawableStart="@drawable/ic_repeat"
+                android:layout_marginHorizontal="6dp" />
+
+            <!-- 4. Store Button -->
+            <Button
+                android:id="@+id/btn_store"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:layout_weight="1"
+                android:text="Store"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/action_store"
+                android:drawableStart="@drawable/ic_store"
+                android:layout_marginStart="6dp" />
+        </LinearLayout>
+
+        <!-- Source Text Input Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card_rounded"
+            android:padding="16dp"
+            android:elevation="2dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:id="@+id/tv_input_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="INPUT TEXT (SPEAK OR TYPE):"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary" />
+
+                <TextView
+                    android:id="@+id/btn_clear_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear"
+                    android:textColor="@color/navy_accent"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_source_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:background="@color/transparent"
+                android:hint="यहाँ बोलिए या लिखिए... (e.g. किताब खोलिए)"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:gravity="top|start" />
+
+            <!-- Quick Phrase Suggestions Horizontal Scroll -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚡ Quick Classroom Test Phrases:"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/quick_chips_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- Translation Output Card -->
+        <LinearLayout
+            android:id="@+id/card_translation_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/bg_card_rounded"
+            android:padding="18dp"
+            android:elevation="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:id="@+id/tv_result_header"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TRANSLATION RESULT (ᱥᱟᱱᱛᱟᱲᱤ ᱛᱚᱨᱡᱚᱢᱟ):"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_secondary" />
+
+                <!-- Response Latency & Offline Badge -->
+                <TextView
+                    android:id="@+id/tv_latency_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⚡ Sub-3s • 100% Offline"
+                    android:textColor="@color/success_green"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="#DCFCE7"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="3dp" />
+            </LinearLayout>
+
+            <!-- Primary Target in Ol Chiki -->
+            <TextView
+                android:id="@+id/tv_result_olchiki"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ᱯᱚᱛᱚᱵ ᱡᱷᱤᱡᱽ ᱢᱮ"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="@color/navy_primary"
+                android:lineSpacingExtra="4dp" />
+
+            <!-- Roman Phonetic Transliteration -->
+            <TextView
+                android:id="@+id/tv_result_roman"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pronunciation: Potob jhij me"
+                android:textSize="16sp"
+                android:textColor="@color/navy_accent"
+                android:textStyle="italic"
+                android:layout_marginTop="6dp" />
+
+            <!-- Secondary Hindi / English meaning -->
+            <TextView
+                android:id="@+id/tv_result_meaning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Meaning: किताब खोलिए (Open your book)"
+                android:textSize="14sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="4dp" />
+
+            <!-- Play Audio & Speed Control Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:paddingTop="12dp">
+
+                <Button
+                    android:id="@+id/btn_play_result_audio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="Play Audio 🔊"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/navy_primary" />
+
+                <TextView
+                    android:id="@+id/tv_playback_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Acoustic Formant Synthesizer Ready"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginStart="12dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
