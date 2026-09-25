@@ -1,0 +1,14 @@
+*.iml
+.gradle
+/local.properties
+/.idea/
+.DS_Store
+/app/build/intermediates/
+/app/build/generated/
+/app/build/outputs/logs/
+/app/build/tmp/
+/app/build/kotlin/
+/app/build/reports/
+/app/build/test-results/
+.externalNativeBuild
+.cxx
