@@ -1,0 +1,13 @@
+<resources>
+    <style name="Theme.MoolVani" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/navy_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/navy_accent_light</item>
+        <item name="colorOnPrimaryContainer">@color/navy_dark</item>
+        <item name="colorSecondary">@color/navy_accent</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/navy_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">@color/bg_screen</item>
+    </style>
+</resources>
